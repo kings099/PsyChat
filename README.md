@@ -1,7 +1,7 @@
 # PsyChat
 
 **PsyChat** is an iOS app designed for emotional support through multi-persona AI conversation.  
-Built with SwiftUI and powered by DashScope's Qwen LLM, it enables real-time streaming responses tailored by different psychological personas:
+Built with SwiftUI and powered by fine-tuned Qwen2.5-7b LLM, it enables real-time streaming responses tailored by different psychological personas:
 
 - 🧠 Rational Analyst — objective, thoughtful, and logically grounded  
 - 😄 Humorous Companion — witty, playful, and emotionally uplifting  
