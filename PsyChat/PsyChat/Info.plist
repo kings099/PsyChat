@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CustomLLMBaseURL</key>
-	<string>https://d438-2001-da8-8002-6bd1-c11e-141c-7bba-24c7.ngrok-free.app</string>
+	<string>http://101.201.76.166:8000</string>
 	<key>DashScopeAPIKey</key>
 	<string>0</string>
 	<key>NSAppTransportSecurity</key>

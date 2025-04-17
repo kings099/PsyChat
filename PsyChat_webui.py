@@ -8,13 +8,13 @@ import os
 import streamlit as st
 from openai import OpenAI
 
-st.logo("logo.png",size='large')
+st.logo("logo.png",size="large")
 # Initialize API client
 api_key = os.getenv("OPENAI_API_KEY") or os.getenv("DASHSCOPE_API_KEY")
 if not api_key:
     st.error("环境变量 OPENAI_API_KEY 或 DASHSCOPE_API_KEY 未设置，请先配置 API Key。")
     st.stop()
-client = OpenAI(api_key=api_key, base_url=os.getenv("BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1"))
+client = OpenAI(api_key="0", base_url=os.getenv("BASE_URL", "http://101.201.76.166:8000/v1"))  # Default to local server
 
 # Define personalities and prompts
 PERSONALITIES = {
@@ -24,8 +24,8 @@ PERSONALITIES = {
 }
 
 # Model configuration
-#MODEL_NAME = os.getenv("MODEL_NAME", "qwen-2.5-7b-psychat")
-MODEL_NAME = os.getenv("MODEL_NAME", "qwen-plus") 
+MODEL_NAME = os.getenv("MODEL_NAME", "qwen-2.5-7b-psychat")
+#MODEL_NAME = os.getenv("MODEL_NAME", "qwen-plus") 
 MODEL_CONFIG = {"max_length": 512, "temperature": 0.9, "top_p": 0.8}
 
 def llm_chat_via_api(system_prompt, messages):
@@ -45,10 +45,8 @@ def main():
     st.markdown(
         """
         <style>
-        .stApp { background: linear-gradient(to bottom right, #ffeedd, #ffffff); }
-        .stSidebar { background-color: #fff8f2; padding: 16px; }
-        .stSidebar button { width: 100%; border-radius: 12px; margin: 8px 0; padding: 12px; font-size: 18px; background-color: #ffffff; border: 2px solid #ffd1a4; }
-        .stSidebar button:hover { background-color: #ffe6cc; }
+        .stSidebar button { width: 100%; border-radius: 12px; margin: 8px 0; padding: 12px; font-size: 18px; border: 2px solid #ffd1a4; }
+        .stSidebar button:hover { background-color: #ffd1a4;}
         </style>
         """, unsafe_allow_html=True
     )
@@ -62,6 +60,7 @@ def main():
         st.session_state.selected = list(PERSONALITIES.keys())[0]
 
     # Sidebar for personality selection
+    st.sidebar.image("PsyChatlogo.png",use_container_width=True)
     st.sidebar.header("选择情感支持人格")
     for p in PERSONALITIES:
         if st.sidebar.button(p, key=p):
