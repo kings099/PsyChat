@@ -14,7 +14,7 @@ api_key = os.getenv("OPENAI_API_KEY") or os.getenv("DASHSCOPE_API_KEY")
 if not api_key:
     st.error("环境变量 OPENAI_API_KEY 或 DASHSCOPE_API_KEY 未设置，请先配置 API Key。")
     st.stop()
-client = OpenAI(api_key="0", base_url=os.getenv("BASE_URL", "http://101.201.76.166:8000/v1"))  # Default to local server
+client = OpenAI(api_key="0", base_url=os.getenv("BASE_URL", "http://101.201.82.249:8000/v1"))  # Default to local server
 
 # Define personalities and prompts
 PERSONALITIES = {
