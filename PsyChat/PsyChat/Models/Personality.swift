@@ -17,7 +17,7 @@ enum Personality: String, CaseIterable, Identifiable, Codable {
     var systemPrompt: String {
         switch self {
         case .rational:
-            return "你是一个理性人格的心理咨询师。请逻辑清晰、基于事实地给用户提供情感支持"
+            return ""
         case .humorous:
             return "以幽默风趣的人格提供情感支持"
         case .gentle:
