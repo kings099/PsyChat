@@ -266,9 +266,11 @@ extension LLMService {
         onDelta: @escaping (String) -> Void,
         onComplete: @escaping (Error?) -> Void
     ) {
-        
         Task {
             do {
+                // 限制最近 10 条消息（5轮）
+                let limitedMessages = Array(messages.suffix(9))
+
                 // ① 组装请求
                 guard let apiKey = getDashScopeAPIKey() else {
                     throw LLMError.missingAPIKey
@@ -280,9 +282,9 @@ extension LLMService {
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
 
-                // ② 构建 body：**一定要带 `"stream": true`**
+                // ② 构建 body，包含 stream: true
                 var reqMsgs = [RequestMessage(role: "system", content: systemPrompt)]
-                for m in messages {
+                for m in limitedMessages {
                     reqMsgs.append(
                         RequestMessage(
                             role: m.sender == .user ? "user" : "assistant",
@@ -295,14 +297,13 @@ extension LLMService {
                     let model: String
                     let messages: [RequestMessage]
                     let stream: Bool
-                    // 也可以按需加 temperature、top_p …
                 }
 
                 let body = Body(model: "qwen", messages: reqMsgs, stream: true)
                 request.httpBody = try JSONEncoder().encode(body)
 
+                // Debug 打印请求
                 print("[DEBUG] will send request to", request.url!.absoluteString)
-
                 for (k, v) in request.allHTTPHeaderFields ?? [:] {
                     print("  \(k): \(v)")
                 }
@@ -310,17 +311,18 @@ extension LLMService {
                    let s = String(data: body, encoding: .utf8) {
                     print("  body:", s)
                 }
-                
-                // ③ 发送并按行读取 SSE／text‑event‑stream
+
+                // ③ 发送请求并读取 SSE 流
                 let (bytes, _) = try await URLSession.shared.bytes(for: request)
 
                 for try await line in bytes.lines {
                     guard line.hasPrefix("data:") else { continue }
 
                     let payload = line.dropFirst(5).trimmingCharacters(in: .whitespaces)
-                    if payload == "[DONE]" { break }          // 结束标记
+                    if payload == "[DONE]" {
+                        break // 流式结束标记
+                    }
 
-                    // DashScope OpenAI‑兼容流的 JSON 片段
                     struct Chunk: Decodable {
                         struct Choice: Decodable {
                             struct Delta: Decodable { let content: String? }
@@ -333,13 +335,13 @@ extension LLMService {
                     if let data = payload.data(using: .utf8),
                        let chunk = try? JSONDecoder().decode(Chunk.self, from: data),
                        let piece = chunk.choices.first?.delta.content {
-                        onDelta(piece)                       // ← 把新片段抛给上层
+                        onDelta(piece)
                     }
                 }
 
-                onComplete(nil)                              // 正常结束
+                onComplete(nil) // 成功完成
             } catch {
-                onComplete(error)                            // 出错
+                onComplete(error) // 出错
             }
         }
     }

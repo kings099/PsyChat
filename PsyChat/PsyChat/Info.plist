@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CustomLLMBaseURL</key>
-	<string>http://101.201.76.166:8000</string>
+	<string>http://101.201.82.249:8000</string>
 	<key>DashScopeAPIKey</key>
 	<string>0</string>
 	<key>NSAppTransportSecurity</key>
