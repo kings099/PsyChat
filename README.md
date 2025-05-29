@@ -17,4 +17,4 @@ Developed for educational and research purposes, especially in AI-assisted menta
 
 ![Simulator Screenshot - iPhone 16 Pro - 2025-04-15 at 08.23.41](Asset/screenshot1.png)
 
-![Simulator Screenshot - iPhone 16 Pro - 2025-04-16 at 16.23.08](Asset/screenshot1.png)
+![Simulator Screenshot - iPhone 16 Pro - 2025-04-16 at 16.23.08](Asset/screenshot2.png)
